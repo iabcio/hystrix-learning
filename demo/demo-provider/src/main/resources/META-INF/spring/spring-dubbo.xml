@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd 
+       http://dubbo.apache.org/schema/dubbo 
+       http://dubbo.apache.org/schema/dubbo/dubbo.xsd"
+       default-autowire="byName" default-lazy-init="false">
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath*:**/*.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 开启注解处理器 -->
+    <context:annotation-config/>
+    <context:component-scan base-package="io.iabc.learning.demo.provider"/>
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!-- 消费者应用信息，用于计算依赖关系-->
+    <dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.owner}"
+                       organization="${dubbo.application.organization}"/>
+
+    <!-- 使用zookper发现服务地址-->
+    <dubbo:registry address="${dubbo.registry.address}"/>
+
+    <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" iothreads="500" threads="500" dispatcher="all"
+                    threadpool="cached"/>
+
+    <dubbo:monitor protocol="registry"/>
+
+</beans>
+
+
